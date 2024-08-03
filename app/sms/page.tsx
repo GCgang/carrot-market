@@ -3,12 +3,12 @@ import FormInput from '@/components/FormInput';
 
 export default function SMSLogin() {
   return (
-    <div>
-      <div>
-        <h1>SMS Log in</h1>
-        <h2>Verify your phone number</h2>
+    <div className='flex flex-col gap-10 py-8 px-6'>
+      <div className='flex flex-col gap-2 *:font-medium'>
+        <h1 className='text-2xl'>SMS Log in</h1>
+        <h2 className='text-xl'>Verify your phone number</h2>
       </div>
-      <form>
+      <form className='flex flex-col gap-3'>
         <FormInput
           type='number'
           placeholder='Phone number'
