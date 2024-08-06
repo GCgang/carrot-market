@@ -4,6 +4,7 @@ import {
   USERNAME_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 
 import { z } from 'zod';
@@ -28,10 +29,7 @@ const formSchema = z
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH)
-      .regex(
-        PASSWORD_REGEX,
-        'Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-'
-      ),
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirmPassword: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
