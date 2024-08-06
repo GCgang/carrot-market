@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { TOKEN_MAX_VALUE, TOKEN_MIN_VALUE } from '@/lib/constants';
 
 export default function SMSLogin() {
   return (
@@ -20,6 +21,8 @@ export default function SMSLogin() {
           name='token'
           type='number'
           placeholder='Verification code'
+          min={TOKEN_MIN_VALUE}
+          max={TOKEN_MAX_VALUE}
           required
           errors={[]}
         />
