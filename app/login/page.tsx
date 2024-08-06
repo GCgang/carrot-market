@@ -5,6 +5,7 @@ import Input from '@/components/Input';
 import SocialLogin from '@/components/SocialLogin';
 import { useFormState } from 'react-dom';
 import { handleForm } from './actions';
+import { PASSWORD_MIN_LENGTH } from '@/lib/constants';
 
 export default function Login() {
   const [state, action] = useFormState(handleForm, null);
@@ -26,6 +27,7 @@ export default function Login() {
           name='password'
           type='password'
           placeholder='Password'
+          minLength={PASSWORD_MIN_LENGTH}
           required
           errors={state?.errors ?? []}
         />
