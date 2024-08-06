@@ -8,3 +8,5 @@ export const PASSWORD_REGEX = new RegExp(
 );
 export const PASSWORD_REGEX_ERROR =
   'Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-';
+export const TOKEN_MIN_VALUE = 100000;
+export const TOKEN_MAX_VALUE = 999999;
