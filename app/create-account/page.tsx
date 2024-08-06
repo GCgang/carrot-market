@@ -30,7 +30,7 @@ export default function CreateAccount() {
           type='email'
           placeholder='Email'
           required
-          errors={state?.fieldErrors.username}
+          errors={state?.fieldErrors.email}
         />
         <Input
           name='password'
@@ -38,7 +38,7 @@ export default function CreateAccount() {
           placeholder='Password'
           minLength={PASSWORD_MIN_LENGTH}
           required
-          errors={state?.fieldErrors.username}
+          errors={state?.fieldErrors.password}
         />
         <Input
           name='confirmPassword'
@@ -46,7 +46,7 @@ export default function CreateAccount() {
           placeholder='Confirm Password'
           minLength={PASSWORD_MIN_LENGTH}
           required
-          errors={state?.fieldErrors.username}
+          errors={state?.fieldErrors.confirmPassword}
         />
         <Button text='Create account' />
       </form>
