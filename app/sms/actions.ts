@@ -1,15 +1,47 @@
 'use server';
 import { z } from 'zod';
 import validator from 'validator';
-
 import { TOKEN_MIN_VALUE, TOKEN_MAX_VALUE } from '@/lib/constants';
+import { redirect } from 'next/navigation';
 
-const phoneSchema = {
-  phone: z.string().trim().refine(validator.isMobilePhone),
-};
+const phoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (phone) => validator.isMobilePhone(phone, 'ko-KR'),
+    'Wrong phone format'
+  );
 
-const tokenSchema = {
-  token: z.coerce.number().min(TOKEN_MIN_VALUE).max(TOKEN_MAX_VALUE),
-};
+const tokenSchema = z.coerce.number().min(TOKEN_MIN_VALUE).max(TOKEN_MAX_VALUE);
 
-export async function snsLogin(prevState: any, formData: FormData) {}
+interface ActionState {
+  token: boolean;
+}
+
+export async function smsLogIn(prevState: ActionState, formData: FormData) {
+  const phone = formData.get('phone');
+  const token = formData.get('token');
+  if (!prevState.token) {
+    const result = phoneSchema.safeParse(phone);
+    if (!result.success) {
+      return {
+        token: false,
+        error: result.error.flatten(),
+      };
+    } else {
+      return {
+        token: true,
+      };
+    }
+  } else {
+    const result = tokenSchema.safeParse(token);
+    if (!result.success) {
+      return {
+        token: true,
+        error: result.error.flatten(),
+      };
+    } else {
+      redirect('/');
+    }
+  }
+}
