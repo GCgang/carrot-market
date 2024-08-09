@@ -8,6 +8,8 @@ import {
 } from '@/lib/constants';
 import db from '@/lib/db';
 import { z } from 'zod';
+import { hash } from 'bcrypt';
+
 const checkUniqueUsername = async (username: string) => {
   const user = await db.user.findUnique({
     where: {
@@ -43,7 +45,6 @@ const formSchema = z
       .max(USERNAME_MAX_LENGTH)
       .trim()
       .toLowerCase()
-      .transform((username) => `🥕${username}`)
       .refine(
         (username) => !username.includes('username'),
         'No username allowd!'
@@ -84,6 +85,18 @@ export async function createAccount(prevState: any, formData: FormData) {
   if (!result.success) {
     return result.error.flatten();
   } else {
-    console.log(result.data);
+    const hashedPassword = await hash(result.data.password, 12);
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
+    console.log(user);
+    console.log(hashedPassword);
   }
 }
