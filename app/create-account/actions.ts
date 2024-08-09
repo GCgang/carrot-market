@@ -6,8 +6,31 @@ import {
   PASSWORD_REGEX,
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
-
+import db from '@/lib/db';
 import { z } from 'zod';
+const checkUniqueUsername = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return !Boolean(user);
+};
+
+const checkUniqueEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return !Boolean(user);
+};
 
 const formSchema = z
   .object({
@@ -24,8 +47,16 @@ const formSchema = z
       .refine(
         (username) => !username.includes('username'),
         'No username allowd!'
+      )
+      .refine(checkUniqueUsername, 'This username is already taken'),
+    email: z
+      .string()
+      .email()
+      .toLowerCase()
+      .refine(
+        checkUniqueEmail,
+        'There is an account already registered with that email'
       ),
-    email: z.string().email().toLowerCase(),
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH)
@@ -49,7 +80,7 @@ export async function createAccount(prevState: any, formData: FormData) {
     password: formData.get('password'),
     confirmPassword: formData.get('confirmPassword'),
   };
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();
   } else {
