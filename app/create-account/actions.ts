@@ -7,8 +7,10 @@ import {
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
+import getSession from '@/lib/session';
 import { z } from 'zod';
 import { hash } from 'bcrypt';
+import { redirect } from 'next/navigation';
 
 const checkUniqueUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -99,7 +101,9 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    console.log(user);
-    console.log(hashedPassword);
+    const session = await getSession();
+    session.id = user.id;
+    await session.save();
+    redirect('/profile');
   }
 }
