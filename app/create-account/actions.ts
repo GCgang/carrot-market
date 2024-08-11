@@ -34,6 +34,14 @@ const checkUniqueEmail = async (email: string) => {
   return !Boolean(user);
 };
 
+const checkPasswords = ({
+  password,
+  confirmPassword,
+}: {
+  password: string;
+  confirmPassword: string;
+}) => password === confirmPassword;
+
 const formSchema = z
   .object({
     username: z
@@ -64,14 +72,9 @@ const formSchema = z
       .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirmPassword: z.string().min(PASSWORD_MIN_LENGTH),
   })
-  .superRefine(({ password, confirmPassword }, ctx) => {
-    if (password !== confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'Two passwords should be equal',
-        path: ['confirmPassword'],
-      });
-    }
+  .refine(checkPasswords, {
+    message: 'Both passwords should be the same!',
+    path: ['confirmPassword'],
   });
 
 export async function createAccount(prevState: any, formData: FormData) {
