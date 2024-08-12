@@ -1,8 +1,12 @@
 import db from '@/lib/db';
-import getSession, { loginUserSession } from '@/lib/session';
-import { notFound, redirect } from 'next/navigation';
+import { loginUserSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
-
+import {
+  getGithubAccessToken,
+  getGithubUser,
+  getGithubEmail,
+} from '@/lib/githubOAuth';
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get('code');
   if (!code) {
@@ -10,32 +14,10 @@ export async function GET(request: NextRequest) {
       status: 400,
     });
   }
-  const accessTokenParams = new URLSearchParams({
-    client_id: process.env.GITHUB_CLIENT_ID!,
-    client_secret: process.env.GITHUB_CLIENT_PASSWORD!,
-    code,
-  }).toString();
-  const accessTokenURL = `https://github.com/login/oauth/access_token?
-  ${accessTokenParams}`;
-  const accessTokenResponse = await fetch(accessTokenURL, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-    },
-  });
-  const { error, accessToken } = await accessTokenResponse.json();
-  if (error) {
-    return new Response(null, {
-      status: 400,
-    });
-  }
-  const userProfileReponse = await fetch('https://api.github.com/user', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    cache: 'no-cache', // NextJS에서 fetch request를 cache 하기 때문에 no-cache 설정
-  });
-  const { id, avatar_url, login } = await userProfileReponse.json();
+  const accessToken = await getGithubAccessToken(code);
+  const { id, avatar_url, login } = await getGithubUser(accessToken);
+  const email = await getGithubEmail(accessToken);
+
   const user = await db.user.findUnique({
     where: {
       github_id: id + '',
@@ -53,6 +35,7 @@ export async function GET(request: NextRequest) {
       username: login,
       github_id: id + '',
       avatar: avatar_url,
+      email,
     },
     select: {
       id: true,
@@ -61,3 +44,5 @@ export async function GET(request: NextRequest) {
   await loginUserSession(newUser.id);
   return redirect('/profile');
 }
+
+// username 과 Github의 login(username) 이름 중복 해결 햐여험

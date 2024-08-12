@@ -7,7 +7,7 @@ import {
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
-import getSession, { loginUserSession } from '@/lib/session';
+import { loginUserSession } from '@/lib/session';
 import { z } from 'zod';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
