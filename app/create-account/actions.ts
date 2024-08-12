@@ -7,7 +7,7 @@ import {
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
-import getSession from '@/lib/session';
+import getSession, { loginUserSession } from '@/lib/session';
 import { z } from 'zod';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -107,9 +107,7 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    const session = await getSession();
-    session.id = user.id;
-    await session.save();
+    await loginUserSession(user.id);
     redirect('/profile');
   }
 }

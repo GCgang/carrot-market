@@ -5,7 +5,7 @@ import {
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
-import getSession from '@/lib/session';
+import getSession, { loginUserSession } from '@/lib/session';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { redirect } from 'next/navigation';
@@ -31,8 +31,6 @@ const formSchema = z.object({
   password: z.string({
     required_error: 'Password is required',
   }),
-  // .min(PASSWORD_MIN_LENGTH),
-  // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
 
 export async function logIn(prevState: any, formData: FormData) {
@@ -57,9 +55,7 @@ export async function logIn(prevState: any, formData: FormData) {
     });
     const ok = await bcrypt.compare(result.data.password, user!.password ?? '');
     if (ok) {
-      const session = await getSession();
-      session.id = user!.id;
-      session.save();
+      await loginUserSession(user!.id);
       redirect('/profile');
     } else {
       return {
