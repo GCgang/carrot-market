@@ -1,3 +1,7 @@
 export default function Live() {
-  return <div>Live</div>;
+  return (
+    <div>
+      <h1 className='text-white text-4xl'>Live!</h1>
+    </div>
+  );
 }
