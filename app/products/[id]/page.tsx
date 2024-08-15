@@ -49,13 +49,23 @@ export default async function ProductDetail({
 
   return (
     <div>
-      <div>
-        <Image src={product.photo} alt={product.title} />
+      <div className='relative aspect-square'>
+        <Image
+          fill
+          src={product.photo}
+          alt={product.title}
+          className='object-cover'
+        />
       </div>
-      <div>
-        <div>
+      <div className='p-5 flex items-center gap-3 border-b border-neutral-700'>
+        <div className='size-10 overflow-hidden rounded-full'>
           {product.user.avatar !== null ? (
-            <Image src={product.user.avatar} alt={product.user.username} />
+            <Image
+              src={product.user.avatar}
+              alt={product.user.username}
+              width={40}
+              height={40}
+            />
           ) : (
             <UserIcon />
           )}
@@ -64,14 +74,25 @@ export default async function ProductDetail({
           <h3>{product.user.username}</h3>
         </div>
       </div>
-      <div>
-        <h1>{product.title}</h1>
+      <div className='p-5'>
+        <h1 className='text-2xl font-semibold'>{product.title}</h1>
         <p>{product.description}</p>
       </div>
-      <div>
-        <span>{formatToWon(product.price)}원</span>
-        {isOwner ? <button>Delete product</button> : null}
-        <Link href={''}>채팅하기</Link>
+      <div className='fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-between items-center'>
+        <span className='font-semibold text-xl'>
+          {formatToWon(product.price)}원
+        </span>
+        {isOwner ? (
+          <button className='bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold'>
+            Delete product
+          </button>
+        ) : null}
+        <Link
+          href={''}
+          className='bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold'
+        >
+          채팅하기
+        </Link>
       </div>
     </div>
   );
