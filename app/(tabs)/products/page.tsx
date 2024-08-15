@@ -29,7 +29,7 @@ export type InitialProducts = Prisma.PromiseReturnType<
 export default async function Products() {
   const initialProducts = await getInitialProducts();
   return (
-    <div>
+    <div className='p-5 flex flex-col gap-5'>
       <ProductList initialProducts={initialProducts} />
       <Link
         href={'/products/add'}
