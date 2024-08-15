@@ -19,13 +19,15 @@ export default function ListProduct({
 }: IListProductProps) {
   return (
     <Link href={`/products/${id}`}>
-      <div>
-        <Image fill src={photo} alt={title} />
+      <div className='relative size-28 rounded-md overflow-hidden'>
+        <Image fill src={photo} alt={title} className='object-cover' />
       </div>
-      <div>
-        <span>{title}</span>
-        <span>{formatToTimeAgo(created_at.toString())}</span>
-        <span>{formatToWon(price)}원</span>
+      <div className='flex flex-col gap-1 *:text-white'>
+        <span className='text-lg'>{title}</span>
+        <span className='text-sm text-neutral-500'>
+          {formatToTimeAgo(created_at.toString())}
+        </span>
+        <span className='text-lg font-semibold'>{formatToWon(price)}원</span>
       </div>
     </Link>
   );
