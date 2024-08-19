@@ -25,8 +25,13 @@ export type InitialProducts = Prisma.PromiseReturnType<
   typeof getInitialProducts
 >;
 
+export const metadata = {
+  title: 'Home',
+};
+
 export default async function Products() {
   const initialProducts = await getInitialProducts();
+
   return (
     <div className='p-5 flex flex-col gap-5'>
       <ProductList initialProducts={initialProducts} />
