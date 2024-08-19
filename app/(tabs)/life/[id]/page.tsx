@@ -42,9 +42,7 @@ const getCachedPost = nextCache(getPost, ['post-detail'], {
   tags: ['post-detail'],
   revalidate: 60,
 });
-
-async function getLikeStatus(postId: number) {
-  const session = await getSession();
+async function getLikeStatus(postId: number, session: any) {
   const isLiked = await db.like.findUnique({
     where: {
       id: {
@@ -64,13 +62,16 @@ async function getLikeStatus(postId: number) {
   };
 }
 
-function getCachedLikeStatus(postId: number) {
-  const cachedOperation = nextCache(getLikeStatus, ['product-like-status'], {
-    tags: [`like-status-${postId}`],
-  });
+function getCachedLikeStatus(postId: number, session: any) {
+  const cachedOperation = nextCache(
+    (postId) => getLikeStatus(postId, session),
+    ['product-like-status'],
+    {
+      tags: [`like-status-${postId}`],
+    }
+  );
   return cachedOperation(postId);
 }
-
 export default async function PostDetail({
   params,
 }: {
@@ -80,12 +81,14 @@ export default async function PostDetail({
   if (isNaN(id)) {
     return notFound();
   }
+
+  const session = await getSession();
   const post = await getCachedPost(id);
   if (!post) {
     return notFound();
   }
 
-  const { likeCount, isLiked } = await getCachedLikeStatus(id);
+  const { likeCount, isLiked } = await getCachedLikeStatus(id, session);
   return (
     <div className='p-5 text-white'>
       <div className='flex items-center gap-2 mb-2'>

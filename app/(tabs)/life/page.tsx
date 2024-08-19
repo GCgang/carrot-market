@@ -5,6 +5,7 @@ import {
   HandThumbUpIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { PlusIcon } from '@heroicons/react/24/solid';
 
 async function getPosts() {
   const posts = await db.post.findMany({
@@ -36,7 +37,7 @@ export default async function Life() {
       {posts.map((post) => (
         <Link
           key={post.id}
-          href={`/posts/${post.id}`}
+          href={`/life/${post.id}`}
           className='pb-5 mb-5 border-b border-neutral-500 flex flex-col gap-2 last:pb-0 last:border-b-0'
         >
           <h2 className='text-white text-lg font-semibold'>{post.title}</h2>
@@ -60,6 +61,13 @@ export default async function Life() {
           </div>
         </Link>
       ))}
+      <Link
+        href={'/life/add'}
+        className='bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24
+        right-8 text-white transition-colors hover:bg-orange-400'
+      >
+        <PlusIcon className='size-10' />
+      </Link>
     </div>
   );
 }

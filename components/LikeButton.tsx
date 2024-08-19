@@ -1,7 +1,7 @@
 'use client';
 import { HandThumbUpIcon } from '@heroicons/react/24/solid';
 import { HandThumbUpIcon as OutlineHandThumbUpIcon } from '@heroicons/react/24/outline';
-import { dislikePost, likePost } from '@/app/posts/[id]/actions';
+import { dislikePost, likePost } from '@/app/(tabs)/life/[id]/actions';
 import { useOptimistic } from 'react';
 
 interface LikeButtonProps {
@@ -48,7 +48,7 @@ export default function LikeButton({
       {state.isLiked ? (
         <span> {state.likeCount}</span>
       ) : (
-        <span>공감하기 ({state.likeCount})</span>
+        <span> {state.likeCount}</span>
       )}
     </button>
   );
