@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { formatToWon } from '@/lib/utils';
 import Link from 'next/link';
 
-export async function getProduct(productId: number) {
-  const product = db.product.findUnique({
+async function getProduct(productId: number) {
+  const product = await db.product.findUnique({
     where: {
       id: productId,
     },

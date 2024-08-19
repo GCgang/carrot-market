@@ -1,10 +1,27 @@
 import { UserIcon } from '@heroicons/react/24/solid';
 import { notFound } from 'next/navigation';
-import { getProduct } from '@/app/products/[id]/page';
 import CloseButton from '@/components/CloseButton';
 import Image from 'next/image';
 import { formatToWon } from '@/lib/utils';
 import Link from 'next/link';
+import db from '@/lib/db';
+
+async function getProduct(productId: number) {
+  const product = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+  return product;
+}
 
 export default async function Modal({ params }: { params: { id: string } }) {
   const id = Number(params.id);
