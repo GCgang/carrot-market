@@ -1,3 +1,4 @@
+'use client';
 import { HandThumbUpIcon } from '@heroicons/react/24/solid';
 import { HandThumbUpIcon as OutlineHandThumbUpIcon } from '@heroicons/react/24/outline';
 import { dislikePost, likePost } from '@/app/posts/[id]/actions';
