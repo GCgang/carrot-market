@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { formatToTimeAgo } from '@/lib/utils';
 import { RealtimeChannel, createClient } from '@supabase/supabase-js';
+import { saveMessage } from '@/app/chats/action';
 
 const SUPABASE_PUBLIC_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbWxkbnVhbWJsYnJsZHhxd2F1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQyNDEzMDMsImV4cCI6MjAzOTgxNzMwM30.CwaNmfdQJydnU84jzYfzid9MBfAb2eRj9q0fXx228AY';
@@ -35,7 +36,7 @@ export default function ChatMessagesList({
     } = event;
     setMessage(value);
   };
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setMessages((prevMsgs) => [
       ...prevMsgs,
@@ -64,6 +65,7 @@ export default function ChatMessagesList({
         },
       },
     });
+    await saveMessage(message, chatRoomId);
     setMessage('');
   };
   useEffect(() => {
