@@ -89,7 +89,7 @@ export default function ChatMessagesList({
         >
           {message.userId === userId ? null : (
             <Image
-              src={message.user.avatar!}
+              src={message.user.avatar ? message.user.avatar : ''}
               alt={message.user.username}
               width={50}
               height={50}
@@ -109,7 +109,9 @@ export default function ChatMessagesList({
               {message.payload}
             </span>
             <span className='text-xs'>
-              {formatToTimeAgo(message.created_at.toString())}
+              {message &&
+                message.created_at &&
+                formatToTimeAgo(message.created_at.toString())}
             </span>
           </div>
         </div>
